@@ -94,3 +94,17 @@ You can simply ask to get a filtered JSON output file if you want to use this fo
 Python smartFFUF.py <IP> -json
 ```
 
+### Header modification
+
+```
+Python smartFFUF.py <IP> -H "My_Header"
+```
+
+The argument is directly forwarded to FFUF and also reused internally by the Python layer for post-filtering requests.
+
+You can use this option with any header supported by FFUF, for example:
+
+-H "Host: congolexicomatisation.fr"
+-H "Authorization: Bearer TOKEN"
+-H "Cookie: PHPSESSID=1234"
+-H "X-Forwarded-For: 127.0.0.1"
