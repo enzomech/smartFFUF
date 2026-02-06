@@ -28,6 +28,10 @@ parser.add_argument(
     action="store_true",
     help="Generate urlsFiltered.json output file"
 )
+parser.add_argument(
+    "-H", "--header",
+    help='Add custom header (same syntax as ffuf, ex: "Host: example.com")'
+)
 
 args = parser.parse_args()
 
@@ -36,6 +40,7 @@ WORDLIST = args.wordlist
 exclude_filter = args.exclude
 filter_codes = args.filter_codes
 json_output = args.json_output
+custom_header = args.header
 
 # ---------------- RUN FFUF ----------------
 
@@ -51,6 +56,9 @@ ffuf_cmd = [
 
 if filter_codes:
     ffuf_cmd.extend(["-fc", filter_codes])
+
+if custom_header:
+    ffuf_cmd.extend(["-H", custom_header])
 
 subprocess.run(ffuf_cmd, stdout=subprocess.DEVNULL)
 
@@ -71,7 +79,13 @@ filtered_results = []
 for path in tqdm(paths, desc="Filtering", unit="url"):
     url = f"{IP}/{path}"
     try:
-        r = requests.get(url, timeout=5, allow_redirects=True)
+        headers = {}
+        if custom_header:
+            # reuse same header for requests
+            name, value = custom_header.split(":", 1)
+            headers[name.strip()] = value.strip()
+
+        r = requests.get(url, headers=headers, timeout=5, allow_redirects=True)
         status = r.status_code
         length = len(r.content)
         body = r.text
