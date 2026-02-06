@@ -5,6 +5,47 @@ A custom python layer above the great FFUF tool, this is configured for my perso
 
 So basically I started to develop this tool for a pentest box which was polluted by a lot of not worthy hidden files, so the main idea was to add an output filter, called baseline response filtering, to remove results with a precise content inside the body of the file. Then I just embedded the script around this main idea, here is now the actual features.
 
+## Requirements
+
+One-shot installation (Debian / Kali / Parrot)
+```
+sudo apt update && sudo apt install -y ffuf python3 python3-pip && pip3 install requests tqdm
+```
+This installs everything needed to run smartFFUF.
+
+### Dependencies explained
+
+#### ffuf
+The core web fuzzer used to enumerate hidden files and directories.
+
+#### python3
+Interpreter used to run the smartFFUF script.
+
+#### python3-pip
+Python package manager used to install required Python libraries.
+
+### Python libraries used
+
+#### requests
+Used to send HTTP requests and retrieve responses for post-filtering.
+
+#### tqdm
+Used to display a progress bar during the filtering phase.
+
+### Optional (but recommended)
+
+#### SecLists wordlists
+As this is a very personal tool and is configured with a path to my generic wordlist, smartFFUF is configured by default to use:
+```
+/usr/share/wordlists/seclists/Discovery/Web-Content/big.txt
+```
+If you don’t have SecLists installed, you can either:
+
+Modify the ```DEFAULT_WORDLIST = ""``` value on the top part of the script.
+You can also install it, or provide your own wordlist with -w.
+
+On Kali / Parrot / Exegol, SecLists is usually already present.
+
 ## Main command
 
 ```
@@ -16,8 +57,6 @@ You can use the ```-h``` argument to open the help menu anytime with the list of
 This will launch the FFUF tool without really much added value, the only different thing is that you get a ```urlsFiltered.txt``` file with the filtered results. (in this case without filter so...).
 
 ```urlsFiltered.txt``` keep only the wanted results inside the file, here you have the name, the status code and the length of the fuzzed hidden file.
-
-You can see that the python script does not ask you a wordlist path to use it, this is because as I said, this is a very personal tool and is configured with a path to my generic wordlist. If you use exegol as an environment then it should work good for you, but if you don't you probably want to modify the ```DEFAULT_WORDLIST = ""``` value on the top part of the script. You can still modify the wordlist used with arguments, below are the arguments you can use.
 
 ## Arguments
 
